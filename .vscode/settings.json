@@ -1,0 +1,10 @@
+{
+    "files.exclude": {
+      "**/packages.lock.json": false,
+      "**/Migrations/**": false
+    },
+    "omnisharp.enableRoslynAnalyzers": true,
+    "omnisharp.enableEditorConfigSupport": true,
+    "editor.formatOnSave": true
+  }
+  
