@@ -21,7 +21,11 @@ namespace MyDotNetApp.Models
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlite($"Data Source={DbPath}");
+        {
+            options.UseSqlite($"Data Source={DbPath}");
+            options.LogTo(Console.WriteLine);
+            options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+        }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

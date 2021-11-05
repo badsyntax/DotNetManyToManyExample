@@ -7,6 +7,11 @@ namespace MyDotNetApp.Models
     [Table("Posts")]
     public class Post
     {
+        public Post()
+        {
+
+        }
+
         public Post(NewPostDTO newPost)
         {
             Title = newPost.Title;

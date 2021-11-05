@@ -6,6 +6,11 @@ namespace MyDotNetApp.Models
     [Table("Tags")]
     public class Tag
     {
+        public Tag()
+        {
+
+        }
+
         public Tag(NewTagDTO newTag)
         {
             Name = newTag.Name;

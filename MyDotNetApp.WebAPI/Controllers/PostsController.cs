@@ -31,7 +31,8 @@ public class PostsController : ControllerBase
 
         foreach (var tagId in newPost.TagIds)
         {
-            var tag = await _blogContext.Tags.FindAsync(tagId);
+            var tag = await _blogContext.Tags.AsTracking()
+                .SingleOrDefaultAsync(t => t.Id == tagId);
             if (tag != null)
             {
                 post.Tags.Add(tag);
