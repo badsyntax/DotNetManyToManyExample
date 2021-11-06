@@ -31,7 +31,8 @@ public class PostsController : ControllerBase
 
         foreach (var tagId in newPost.TagIds)
         {
-            var tag = await _blogContext.Tags.AsTracking()
+            var tag = await _blogContext.Tags
+                .AsTracking()
                 .SingleOrDefaultAsync(t => t.Id == tagId);
             if (tag != null)
             {
@@ -44,5 +45,45 @@ public class PostsController : ControllerBase
         await _blogContext.SaveChangesAsync();
 
         return CreatedAtAction(nameof(GetPosts), new { id = post.Id }, new PostDTO(post));
+    }
+
+    [HttpPut(Name = "UpdatePost")]
+    public async Task<ActionResult<PostDTO>> UpdatePost(UpdatePostDTO updatePost)
+    {
+        var post = await _blogContext.Posts
+            .Include(p => p.Tags)
+            .AsTracking()
+            .SingleOrDefaultAsync(t => t.Id == updatePost.Id);
+
+        if (post == null)
+        {
+            return NotFound();
+        }
+
+        post.Title = updatePost.Title;
+
+        if (updatePost.TagIds != null)
+        {
+            var tagsToRemove = post.Tags.ToList();
+
+            foreach (var tagToRemove in tagsToRemove)
+            {
+                post.Tags.Remove(tagToRemove);
+            }
+
+            var tagsToAdd = await _blogContext.Tags
+                .Where(t => updatePost.TagIds.Contains(t.Id))
+                .AsTracking()
+                .ToListAsync();
+
+            foreach (var tagToAdd in tagsToAdd)
+            {
+                post.Tags.Add(tagToAdd);
+            }
+        }
+
+        await _blogContext.SaveChangesAsync();
+
+        return NoContent();
     }
 }
